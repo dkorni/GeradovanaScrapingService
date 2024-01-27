@@ -1,0 +1,6 @@
+@Geradovana.ScrapingService.Api_HostAddress = http://localhost:5247
+
+GET {{Geradovana.ScrapingService.Api_HostAddress}}/productcategories/
+Accept: application/json
+
+###
