@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Geradovana.ScrapingService.Domain.Enums;
 
 namespace Geradovana.ScrapingService.Infrastructure.Providers.Scrapers
 {
@@ -28,6 +29,16 @@ namespace Geradovana.ScrapingService.Infrastructure.Providers.Scrapers
 
             var result = categoryMenuItemNodes.Select(ConvertToProductCategory).ToArray();
             return result;
+        }
+
+        public Task<ProductCategorySummary[]> GetSummaries(string categoryName, string? subCategoryName)
+        {
+            var result = new ProductCategorySummary[]
+            {
+                new ProductCategorySummary("poilsis-su-nakvyne", "poilsis-birstone", ProductType.Prabangi, 100, 20)
+            };
+
+            return Task.FromResult(result);
         }
 
         private static ProductCategory ConvertToProductCategory (HtmlNode categoryMenuItemNode)

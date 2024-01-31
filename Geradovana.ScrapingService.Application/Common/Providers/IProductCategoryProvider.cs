@@ -10,5 +10,7 @@ namespace Geradovana.ScrapingService.Application.Common.Providers
     public interface IProductCategoryProvider
     {
         Task<ProductCategory[]> GetAll();
+
+        Task<ProductCategorySummary[]> GetSummaries(string categoryName, string? subCategoryName);
     }
 }

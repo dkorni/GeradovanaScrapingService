@@ -4,3 +4,6 @@ GET {{Geradovana.ScrapingService.Api_HostAddress}}/productcategories/
 Accept: application/json
 
 ###
+
+GET {{Geradovana.ScrapingService.Api_HostAddress}}/productcategories/summaries?category=SPA ir masažai&subcategory=Veido masažai
+Accept: application/json
