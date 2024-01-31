@@ -1,8 +1,11 @@
 ﻿using Geradovana.ScrapingService.Domain;
+using Geradovana.ScrapingService.Domain.Enums;
 
 namespace Geradovana.ScrapingService
 {
     public record Product(
-        decimal price 
-        /*ProductCategoryDetails productCategoryDetails*/);
+        string ProductName,
+        decimal Price,
+        ProductType ProductType
+        );
 }
