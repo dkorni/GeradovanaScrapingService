@@ -4,7 +4,17 @@ using Geradovana.ScrapingService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 builder.Services
+    .AddCors(options =>
+    {
+        options.AddPolicy(name: MyAllowSpecificOrigins,
+                          policy =>
+                          {
+                              policy.WithOrigins("http://localhost:3000"); // add the allowed origins  
+                          });
+    })
     .AddPresentation()
     .AddApplication()
     .AddInfrastructure();
@@ -22,11 +32,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseCors(x => x
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .SetIsOriginAllowed(origin => true)
-    .AllowCredentials());
+app.UseCors(MyAllowSpecificOrigins);
 
 app.MapControllers();
 

@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  geradovana.scrapingservice.api:
+    container_name: geradovana-scraping-service-api
+    image: ${DOCKER_REGISTRY-}geradovanascrapingserviceapi
+    build:
+      context: .
+      dockerfile: Geradovana.ScrapingService.Api/Dockerfile
+    ports:
+      - '4000:8080'
+  geradovana-scraping-service-web:
+    build: ./geradovana-scraping-service-web
+    container_name: geradovana-scraping-service-web
+    ports:
+      - '3000:8080'
+    stdin_open: true
+    tty: true

@@ -44,7 +44,7 @@ function App() {
     [] as ProductCategorySummaryProps[]
   );
 
-  const apiUrl = "http://localhost:5247/";
+  const apiUrl = "http://localhost:4000/";
 
   useEffect(() => {
     const fetchData = async () => {
