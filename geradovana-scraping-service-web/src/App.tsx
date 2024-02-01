@@ -3,7 +3,9 @@ import "./App.css";
 import Header from "./components/Header";
 import ListGroup from "./components/ListGroup";
 import ReturnButton from "./components/ReturnButton";
+import ProductCategorySummary from "./components/ProductCategorySummary";
 import Spinner from "./components/Spinner";
+import ProductCategorySummaryContainer from "./components/ProductCategorySummaryContainer";
 
 function App() {
   const items = ["New York", "Kyiv", "Paris", "London", "Tokyo"];
@@ -16,6 +18,12 @@ function App() {
       SetSubcategoryEnabled(true);
       SetCurrentCategory(categoryData.name);
     }
+
+    fetchSummary(item, "");
+  };
+
+  const handleSelectSubCategoryItem = (item: string, index: number) => {
+    fetchSummary(currentCategory, item);
   };
 
   const handleOnSubItemListReturnButton = () => {
@@ -30,6 +38,11 @@ function App() {
   const [listCategories, SetListCategories] = useState([] as string[]);
   const [listSubCategories, SetListSubCategories] = useState([] as string[]);
   const [currentCategory, SetCurrentCategory] = useState("");
+  const [fetching, SetFetching] = useState(false);
+
+  const [summaries, setSummaries] = useState(
+    [] as ProductCategorySummaryProps[]
+  );
 
   const apiUrl = "http://localhost:5247/";
 
@@ -45,6 +58,25 @@ function App() {
     };
     fetchData();
   }, []);
+
+  const fetchSummary = async (category: string, subCategory: string) => {
+    let apiCallUrl =
+      subCategory == null
+        ? apiUrl + "productcategories/summaries?category=" + category
+        : apiUrl +
+          "productcategories/summaries?category=" +
+          category +
+          "&subcategory=" +
+          subCategory;
+
+    SetFetching(true);
+    const result = await fetch(apiCallUrl);
+    result.json().then((jsonData) => {
+      console.log(jsonData);
+      setSummaries(jsonData);
+      SetFetching(false);
+    });
+  };
 
   return (
     <>
@@ -67,14 +99,33 @@ function App() {
                   <ListGroup
                     heading={currentCategory}
                     items={listSubCategories}
-                    onSelectItem={() => {}}
+                    onSelectItem={handleSelectSubCategoryItem}
                   ></ListGroup>
                 </>
               )}
             </div>
-            <div className="d-flex align-items-center justify-content-center flex-grow-1">
-              <h1 className="text-center">Choose category to see details...</h1>
-            </div>
+
+            {summaries.length > 0 && !fetching ? (
+              <ProductCategorySummaryContainer>
+                {summaries.map((summary) => (
+                  <ProductCategorySummary
+                    type={summary.type}
+                    amount={summary.amount}
+                    averagePrice={summary.averagePrice}
+                  ></ProductCategorySummary>
+                ))}
+              </ProductCategorySummaryContainer>
+            ) : fetching ? (
+              <div className="d-flex align-items-center justify-content-center flex-grow-1">
+                <Spinner></Spinner>
+              </div>
+            ) : (
+              <div className="d-flex align-items-center justify-content-center flex-grow-1">
+                <h1 className="text-center">
+                  Choose category to see details...
+                </h1>
+              </div>
+            )}
           </div>
         </>
       ) : (
