@@ -16,7 +16,7 @@ function ListGroup({ items, heading, onSelectItem }: ListGroupProps) {
 
   return (
     <Fragment>
-      <h1>{heading}</h1>
+      <h4>{heading}</h4>
       <ul className="list-group">
         {items.map((item, index) => (
           <li

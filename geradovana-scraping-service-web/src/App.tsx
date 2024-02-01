@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import Header from "./components/Header";
 import ListGroup from "./components/ListGroup";
+import ReturnButton from "./components/ReturnButton";
+import Spinner from "./components/Spinner";
 
 function App() {
   const items = ["New York", "Kyiv", "Paris", "London", "Tokyo"];
@@ -12,10 +12,14 @@ function App() {
     var categoryData = serviceResponseCategories[index];
     var subCategories = categoryData.subCategories;
     if (subCategories != null) {
-      SetListCategories(subCategories);
+      SetListSubCategories(subCategories);
       SetSubcategoryEnabled(true);
       SetCurrentCategory(categoryData.name);
     }
+  };
+
+  const handleOnSubItemListReturnButton = () => {
+    SetSubcategoryEnabled(false);
   };
 
   const [wasLoaded, SetWasLoaded] = useState(false);
@@ -24,6 +28,7 @@ function App() {
     [] as ProductCategory[]
   );
   const [listCategories, SetListCategories] = useState([] as string[]);
+  const [listSubCategories, SetListSubCategories] = useState([] as string[]);
   const [currentCategory, SetCurrentCategory] = useState("");
 
   const apiUrl = "http://localhost:5247/";
@@ -46,22 +51,36 @@ function App() {
       {wasLoaded ? (
         <>
           <Header></Header>
-          {!subcategoryEnabled ? (
-            <ListGroup
-              heading="Categories"
-              items={listCategories}
-              onSelectItem={handleSelectCategoryItem}
-            ></ListGroup>
-          ) : (
-            <ListGroup
-              heading={currentCategory}
-              items={listCategories}
-              onSelectItem={handleSelectCategoryItem}
-            ></ListGroup>
-          )}
+          <div className="d-flex">
+            <div className="p-2 w-10">
+              {!subcategoryEnabled ? (
+                <ListGroup
+                  heading="Categories"
+                  items={listCategories}
+                  onSelectItem={handleSelectCategoryItem}
+                ></ListGroup>
+              ) : (
+                <>
+                  <ReturnButton
+                    onClick={handleOnSubItemListReturnButton}
+                  ></ReturnButton>
+                  <ListGroup
+                    heading={currentCategory}
+                    items={listSubCategories}
+                    onSelectItem={() => {}}
+                  ></ListGroup>
+                </>
+              )}
+            </div>
+            <div className="d-flex align-items-center justify-content-center flex-grow-1">
+              <h1 className="text-center">Choose category to see details...</h1>
+            </div>
+          </div>
         </>
       ) : (
-        <h1>Data not loaded yet</h1>
+        <div className="d-flex align-items-center justify-content-center flex-grow-1 vh-100">
+          <Spinner></Spinner>
+        </div>
       )}
     </>
   );
