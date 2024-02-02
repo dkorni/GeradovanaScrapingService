@@ -5,7 +5,7 @@ Getting started:
 4. React Scraping Service app should open in browser
 
 Used technologies and libraries:
-dotnet 8 - platform for building cross platform api application
-React - frontend framework for building client web application
-HtmlAgilityPack - handy library for parsing html stuctures
-MediatR - library that implements simple mediator pattern for in-process messaging
+* dotnet 8 - platform for building cross platform api application
+* React - frontend framework for building client web application
+* HtmlAgilityPack - handy library for parsing html stuctures
+* MediatR - library that implements simple mediator pattern for in-process messaging
