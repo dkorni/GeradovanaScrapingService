@@ -6,7 +6,7 @@
     <DockerPublishLocally>False</DockerPublishLocally>
     <ProjectGuid>ea80d242-aba7-4107-a892-11550b3336a2</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
+    <DockerServiceUrl>http://localhost:3000/</DockerServiceUrl>
     <DockerServiceName>geradovana.scrapingservice.api</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
