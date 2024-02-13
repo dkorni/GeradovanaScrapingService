@@ -1,3 +1,5 @@
+The Geradovana Scraping Service is the service that allows you to review average price of all products and their count based on their category and subcategory. All data is parsed from https://geradovana.lt/ 
+
 Getting started:
 1. Clone GeradovanaScrapingService repository
 2. Open "Geradovana.ScrapingService.sln" file with Visual Studio
