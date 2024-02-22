@@ -1,4 +1,5 @@
 ﻿using Geradovana.ScrapingService.Application.Common.Providers;
+using Geradovana.ScrapingService.Infrastructure.Interfaces;
 using Geradovana.ScrapingService.Infrastructure.Providers.Scrapers;
 using Geradovana.ScrapingService.Infrastructure.Providers.Scrapers.ScrapperStrategies.ReadAllPages;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,9 +15,11 @@ namespace Geradovana.ScrapingService.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            var productCategoryProvider = new ProductCategoryProvider(new ParallelReadAllPagesStrategy());
-            services.AddSingleton<IProductCategoryProvider>(productCategoryProvider);
-
+            services.AddHttpClient();
+            
+            services.AddSingleton<IReadAllPagesStrategy, ParallelReadAllPagesStrategy>();
+            services.AddSingleton<IProductCategoryProvider, ProductCategoryProvider>();
+            
             return services;
         }
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Geradovana.ScrapingService.Infrastructure.Interfaces
 {
-    internal interface IReadAllPagesStrategy
+    public interface IReadAllPagesStrategy
     {
         Task<Product[]> ReadAllPages(string requestUrl, int pageCount);
     }

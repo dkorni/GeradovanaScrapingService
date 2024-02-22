@@ -1,19 +1,29 @@
 ﻿using Geradovana.ScrapingService.Infrastructure.Extensions;
 using Geradovana.ScrapingService.Infrastructure.Interfaces;
 using HtmlAgilityPack;
+using System.Net.Http;
 
 namespace Geradovana.ScrapingService.Infrastructure.Providers.Scrapers.ScrapperStrategies.ReadAllPages
 {
-    internal class ParallelReadAllPagesStrategy : IReadAllPagesStrategy
+    public class ParallelReadAllPagesStrategy : IReadAllPagesStrategy
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public ParallelReadAllPagesStrategy(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
         public async Task<Product[]> ReadAllPages(string requestUrl, int pageCount)
         {
             var listOfGetProductsTasks = new List<Task<HtmlDocument>>();
 
+            using var httpClient = _httpClientFactory.CreateClient();
+
             for (int i = 1; i <= pageCount; i++)
             {
                 var pageRequestUrl = $"{requestUrl}?page={i}";
-                var getProductTask = HtmlDocumentProvider.GetHtmlDocument(pageRequestUrl);
+                var getProductTask = httpClient.GetHtmlDocument(pageRequestUrl);
                 listOfGetProductsTasks.Add(getProductTask);
             }
 

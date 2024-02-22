@@ -14,15 +14,19 @@ namespace Geradovana.ScrapingService.Infrastructure.Providers.Scrapers
         private static readonly string Url = "https://www.geradovana.lt/";
         
         private readonly IReadAllPagesStrategy _readAllPagesStrategy;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        internal ProductCategoryProvider(IReadAllPagesStrategy readAllPagesStrategy)
+        public ProductCategoryProvider(IReadAllPagesStrategy readAllPagesStrategy, IHttpClientFactory httpClientFactory)
         {
             _readAllPagesStrategy = readAllPagesStrategy;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<ProductCategory[]> GetAll()
         {
-            var htmlDoc = await HtmlDocumentProvider.GetHtmlDocument(Url);
+            using var httpClient = _httpClientFactory.CreateClient();
+
+            var htmlDoc = await httpClient.GetHtmlDocument(Url);
 
             var categoryMenuItemNodes = htmlDoc.DocumentNode.SelectNodes(XPathes.CategoryMenuItems);
 
@@ -33,12 +37,22 @@ namespace Geradovana.ScrapingService.Infrastructure.Providers.Scrapers
         public async Task<ProductCategorySummary[]> GetSummaries(string categoryName, string? subCategoryName)
         {
             #region format_category_names
-            categoryName = ConvertCategoryToUrlFormat(categoryName);
-            subCategoryName = string.IsNullOrEmpty(subCategoryName) ? null : ConvertCategoryToUrlFormat(subCategoryName);
-            var requestUrl = subCategoryName is null ? Path.Combine(Url, categoryName) : Path.Combine(Url, categoryName, subCategoryName);
+            //categoryName = ConvertCategoryToUrlFormat(categoryName);
+            //subCategoryName = string.IsNullOrEmpty(subCategoryName) ? null : ConvertCategoryToUrlFormat(subCategoryName);
+
+            //var requestUrl = subCategoryName is null ? Path.Combine(Url, categoryName) : Path.Combine(Url, categoryName, subCategoryName);
             #endregion
 
-            var htmlDoc = await HtmlDocumentProvider.GetHtmlDocument(requestUrl);
+            using var httpClient = _httpClientFactory.CreateClient();
+
+            var htmlDoc = await httpClient.GetHtmlDocument(Url);
+            var unfriendlyCategoryNodes = htmlDoc.DocumentNode.SelectNodes("//a");
+            var unfriendlyCategoryUrl = unfriendlyCategoryNodes
+                .FirstOrDefault(x => x.InnerText.Contains(categoryName))
+                ?.GetAttributeValue("href", string.Empty);
+            var requestUrl = unfriendlyCategoryUrl;
+
+            htmlDoc = await httpClient.GetHtmlDocument(requestUrl);
 
             var pageList = htmlDoc.DocumentNode.SelectSingleNode(XPathes.PageListXPath);
             var lastPage = pageList.ParseLastPageCount();

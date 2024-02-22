@@ -9,10 +9,9 @@ namespace Geradovana.ScrapingService.Infrastructure.Providers
 {
     internal static class HtmlDocumentProvider
     {
-        public async static Task<HtmlDocument> GetHtmlDocument(string url)
+        public async static Task<HtmlDocument> GetHtmlDocument(this HttpClient client, string url)
         {
-            var httpClient = new HttpClient();
-            var html = await httpClient.GetStringAsync(url);
+            var html = await client.GetStringAsync(url);
 
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(html);
